@@ -1,0 +1,5 @@
+{
+  "name": "EcoStats Dashboard",
+  "description": "Environmental Intelligence Dashboard with real-time ecological metrics, air quality, and climate data.",
+  "requestFramePermissions": []
+}

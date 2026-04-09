@@ -1,0 +1,271 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+  --color-tertiary: var(--color-tertiary);
+  --color-surface: var(--color-surface);
+  --color-surface-container-lowest: var(--color-surface-container-lowest);
+  --color-surface-container-low: var(--color-surface-container-low);
+  --color-surface-container: var(--color-surface-container);
+  --color-surface-container-high: var(--color-surface-container-high);
+  --color-surface-container-highest: var(--color-surface-container-highest);
+  --color-on-surface: var(--color-on-surface);
+  --color-on-surface-variant: var(--color-on-surface-variant);
+  --color-outline: var(--color-outline);
+  --color-outline-variant: var(--color-outline-variant);
+  --color-primary-container: var(--color-primary-container);
+  --color-on-primary-container: var(--color-on-primary-container);
+  --color-secondary-container: var(--color-secondary-container);
+  --color-on-secondary-container: var(--color-on-secondary-container);
+  --color-tertiary-container: var(--color-tertiary-container);
+  --color-on-tertiary-container: var(--color-on-tertiary-container);
+  --color-error: var(--color-error);
+  --color-error-container: var(--color-error-container);
+  --color-on-error-container: var(--color-on-error-container);
+  --color-background: var(--color-background);
+  --color-on-background: var(--color-on-background);
+  --color-on-primary: var(--color-on-primary);
+  --color-primary-fixed-dim: var(--color-primary-fixed-dim);
+  
+  --font-headline: "Manrope", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-label: "Inter", sans-serif;
+}
+
+@layer base {
+  :root {
+    /* Earth Theme (Light) - Default */
+    --color-primary: #012d1d;
+    --color-secondary: #0e6c4a;
+    --color-tertiary: #152b1c;
+    --color-surface: #f8fafc;
+    --color-surface-container-lowest: #ffffff;
+    --color-surface-container-low: #f1f5f9;
+    --color-surface-container: #e2e8f0;
+    --color-surface-container-high: #cbd5e1;
+    --color-surface-container-highest: #94a3b8;
+    --color-on-surface: #0f172a;
+    --color-on-surface-variant: #334155;
+    --color-outline: #64748b;
+    --color-outline-variant: #cbd5e1;
+    --color-primary-container: #1b4332;
+    --color-on-primary-container: #86af99;
+    --color-secondary-container: #a0f4c8;
+    --color-on-secondary-container: #19724f;
+    --color-tertiary-container: #2a4131;
+    --color-on-tertiary-container: #93ad98;
+    --color-error: #ba1a1a;
+    --color-error-container: #ffdad6;
+    --color-on-error-container: #93000a;
+    --color-background: #f8fafc;
+    --color-on-background: #0f172a;
+    --color-on-primary: #ffffff;
+    --color-primary-fixed-dim: #a5d0b9;
+  }
+
+  .dark {
+    /* Earth Theme (Dark) - Deeper */
+    --color-primary: #a5d0b9;
+    --color-secondary: #4ade80; /* Brighter green for contrast in charts */
+    --color-tertiary: #b3cdb7;
+    --color-surface: #0a0e0c;
+    --color-surface-container-lowest: #050706;
+    --color-surface-container-low: #0f1411;
+    --color-surface-container: #141b17;
+    --color-surface-container-high: #19221d;
+    --color-surface-container-highest: #1e2923;
+    --color-on-surface: #e1e3e4;
+    --color-on-surface-variant: #c1c8c2;
+    --color-outline: #8b938d;
+    --color-outline-variant: #414844;
+    --color-primary-container: #005236;
+    --color-on-primary-container: #c1ecd4;
+    --color-secondary-container: #005236;
+    --color-on-secondary-container: #a0f4c8;
+    --color-tertiary-container: #152b1c;
+    --color-on-tertiary-container: #cee9d3;
+    --color-error: #ffb4ab;
+    --color-error-container: #93000a;
+    --color-on-error-container: #ffdad6;
+    --color-background: #0a0e0c;
+    --color-on-background: #e1e3e4;
+    --color-on-primary: #003824;
+    --color-primary-fixed-dim: #005236;
+  }
+
+  .theme-air {
+    /* Air Theme (Light) - Atmospheric Blues and Grays */
+    --color-primary: #2c3e50;
+    --color-secondary: #5d6d7e;
+    --color-tertiary: #34495e;
+    --color-surface: #f4f6f8;
+    --color-surface-container-lowest: #ffffff;
+    --color-surface-container-low: #eef1f4;
+    --color-surface-container: #e8ecf0;
+    --color-surface-container-high: #e2e7ec;
+    --color-surface-container-highest: #dce2e8;
+    --color-on-surface: #1a1f24;
+    --color-on-surface-variant: #454d54;
+    --color-outline: #757d84;
+    --color-outline-variant: #c5cbd2;
+    --color-primary-container: #d6e4f0;
+    --color-on-primary-container: #1a252f;
+    --color-secondary-container: #e1e8ed;
+    --color-on-secondary-container: #2c3e50;
+    --color-tertiary-container: #d5d8dc;
+    --color-on-tertiary-container: #212f3d;
+    --color-error: #ba1a1a;
+    --color-error-container: #ffdad6;
+    --color-on-error-container: #93000a;
+    --color-background: #f4f6f8;
+    --color-on-background: #1a1f24;
+    --color-on-primary: #ffffff;
+    --color-primary-fixed-dim: #85c1e9;
+  }
+
+  .dark.theme-air {
+    /* Air Theme (Dark) - Deeper */
+    --color-primary: #60a5fa; /* Lighter, more distinct blue */
+    --color-secondary: #94a3b8;
+    --color-tertiary: #85929e;
+    --color-surface: #080c17;
+    --color-surface-container-lowest: #03050a;
+    --color-surface-container-low: #0c1222;
+    --color-surface-container: #121a2f;
+    --color-surface-container-high: #1e293b;
+    --color-surface-container-highest: #334155;
+    --color-on-surface: #f1f5f9;
+    --color-on-surface-variant: #cbd5e1;
+    --color-outline: #64748b;
+    --color-outline-variant: #334155;
+    --color-primary-container: #1a252f;
+    --color-on-primary-container: #d6e4f0;
+    --color-secondary-container: #2c3e50;
+    --color-on-secondary-container: #e1e8ed;
+    --color-tertiary-container: #212f3d;
+    --color-on-tertiary-container: #d5d8dc;
+    --color-error: #ffb4ab;
+    --color-error-container: #93000a;
+    --color-on-error-container: #ffdad6;
+    --color-background: #020617;
+    --color-on-background: #f1f5f9;
+    --color-on-primary: #1a252f;
+    --color-primary-fixed-dim: #2c3e50;
+  }
+
+  .theme-water {
+    /* Water Theme (Light) - Aquatic Blues, Greens, Browns */
+    --color-primary: #004e59;
+    --color-secondary: #208b82;
+    --color-tertiary: #8b5a2b;
+    --color-surface: #f0f7f4;
+    --color-surface-container-lowest: #ffffff;
+    --color-surface-container-low: #e6f2ee;
+    --color-surface-container: #dcf0e9;
+    --color-surface-container-high: #d2ede4;
+    --color-surface-container-highest: #c8eade;
+    --color-on-surface: #101a18;
+    --color-on-surface-variant: #3f4946;
+    --color-outline: #6f7976;
+    --color-outline-variant: #bec9c5;
+    --color-primary-container: #a3f4ff;
+    --color-on-primary-container: #001f24;
+    --color-secondary-container: #a4f5eb;
+    --color-on-secondary-container: #00201d;
+    --color-tertiary-container: #f5d9b8;
+    --color-on-tertiary-container: #3d2200;
+    --color-error: #ba1a1a;
+    --color-error-container: #ffdad6;
+    --color-on-error-container: #93000a;
+    --color-background: #f0f7f4;
+    --color-on-background: #101a18;
+    --color-on-primary: #ffffff;
+    --color-primary-fixed-dim: #4db6ac;
+  }
+
+  .dark.theme-water {
+    /* Water Theme (Dark) - Deeper */
+    --color-primary: #4db6ac;
+    --color-secondary: #80cbc4;
+    --color-tertiary: #d7ccc8;
+    --color-surface: #010b14;
+    --color-surface-container-lowest: #00050a;
+    --color-surface-container-low: #031526;
+    --color-surface-container: #051f38;
+    --color-surface-container-high: #082a4a;
+    --color-surface-container-highest: #0a345c;
+    --color-on-surface: #e1eef5;
+    --color-on-surface-variant: #bfc8cc;
+    --color-outline: #899296;
+    --color-outline-variant: #3f484c;
+    --color-primary-container: #00363e;
+    --color-on-primary-container: #a3f4ff;
+    --color-secondary-container: #00504a;
+    --color-on-secondary-container: #a4f5eb;
+    --color-tertiary-container: #5c3a18;
+    --color-on-tertiary-container: #f5d9b8;
+    --color-error: #ffb4ab;
+    --color-error-container: #93000a;
+    --color-on-error-container: #ffdad6;
+    --color-background: #010b14;
+    --color-on-background: #e1eef5;
+    --color-on-primary: #002025;
+    --color-primary-fixed-dim: #004e59;
+  }
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-headline);
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(24px);
+}
+
+.dark .glass-panel {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+@keyframes particle-fade {
+  0% {
+    opacity: 0.6;
+    transform: scale(1) translate(0, 0);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.8) translate(calc(var(--vx) * 0.5), calc(var(--vy) * 0.5));
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.2) translate(var(--vx), var(--vy));
+  }
+}
+
+.animate-particle-fade {
+  animation: particle-fade 1s forwards cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Date Picker Styling */
+::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+.dark ::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
