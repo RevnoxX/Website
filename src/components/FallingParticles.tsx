@@ -31,7 +31,7 @@ export default function FallingParticles() {
     const path = location.pathname;
     const mode = path === '/' ? 'mix' : path === '/air-quality' ? 'leaf-dust' : 'rain';
 
-    const numParticles = mode === 'rain' ? 25 : 40; // Reduce rain particles
+    const numParticles = mode === 'rain' ? 150 : 40; // Increase rain particles
     for (let i = 0; i < numParticles; i++) {
       particles.push(createParticle(mode, canvas.width, canvas.height));
     }
@@ -48,16 +48,33 @@ export default function FallingParticles() {
         type = 'rain';
       }
 
+      if (type === 'rain') {
+        const z = Math.random(); // Depth: 0 (far) to 1 (near)
+        const speed = z * 20 + 15; // 15 to 35
+        const angle = -Math.PI / 16; // Slight angle to the left
+        return {
+          type,
+          x: Math.random() * w,
+          y: yPos ?? Math.random() * h,
+          z: z,
+          vx: Math.sin(angle) * speed,
+          vy: Math.cos(angle) * speed,
+          length: z * 60 + 20,
+          width: z * 2 + 0.5,
+          opacity: z * 0.6 + 0.2,
+        };
+      }
+
       return {
         type,
         x: Math.random() * w,
         y: yPos ?? Math.random() * h,
-        vx: type === 'rain' ? (Math.random() - 0.5) * 0.5 : (Math.random() - 0.5) * 0.8, // slower
-        vy: type === 'rain' ? Math.random() * 6 + 4 : type === 'leaf' ? Math.random() * 1 + 0.5 : Math.random() * 0.5 + 0.2, // slower
-        size: type === 'rain' ? Math.random() * 1.5 + 1 : type === 'leaf' ? Math.random() * 5 + 4 : Math.random() * 2 + 1,
+        vx: type === 'leaf' ? (Math.random() - 0.5) * 0.8 : (Math.random() - 0.5) * 0.8, // slower
+        vy: type === 'leaf' ? Math.random() * 1 + 0.5 : Math.random() * 0.5 + 0.2, // slower
+        size: type === 'leaf' ? Math.random() * 5 + 4 : Math.random() * 2 + 1,
         angle: Math.random() * Math.PI * 2,
         spin: (Math.random() - 0.5) * 0.03,
-        color: type === 'rain' ? 'rgba(100, 200, 255, 0.4)' : type === 'leaf' ? (Math.random() > 0.5 ? 'rgba(74, 222, 128, 0.5)' : 'rgba(250, 204, 21, 0.5)') : 'rgba(150, 150, 150, 0.3)'
+        color: type === 'leaf' ? (Math.random() > 0.5 ? 'rgba(74, 222, 128, 0.5)' : 'rgba(250, 204, 21, 0.5)') : 'rgba(150, 150, 150, 0.3)'
       };
     }
 
@@ -127,20 +144,22 @@ export default function FallingParticles() {
       for (let i = 0; i < particles.length; i++) {
         let p = particles[i];
 
-        // Mouse repulsion
-        const dx = p.x - mouse.x;
-        const dy = p.y - mouse.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 120) {
-          const force = (120 - dist) / 120;
-          p.vx += (dx / dist) * force * 1.5;
-          p.vy += (dy / dist) * force * 1.5;
+        // Mouse repulsion (only for non-rain)
+        if (p.type !== 'rain') {
+          const dx = p.x - mouse.x;
+          const dy = p.y - mouse.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            const force = (120 - dist) / 120;
+            p.vx += (dx / dist) * force * 1.5;
+            p.vy += (dy / dist) * force * 1.5;
+          }
         }
 
         // Apply velocity
         p.x += p.vx;
         p.y += p.vy;
-        p.angle += p.spin;
+        if (p.type !== 'rain') p.angle += p.spin;
 
         // Friction / Gravity reset
         if (p.type !== 'rain') {
@@ -149,29 +168,52 @@ export default function FallingParticles() {
         }
 
         // Wrap around
-        if (p.y > canvas.height + 20) {
-          particles[i] = createParticle(mode, canvas.width, canvas.height, -20);
+        if (p.y > canvas.height + (p.length || 20)) {
+          particles[i] = createParticle(mode, canvas.width, canvas.height, -(p.length || 20));
           particles[i].x = Math.random() * canvas.width;
         }
-        if (p.x > canvas.width + 20) p.x = -20;
-        if (p.x < -20) p.x = canvas.width + 20;
+        if (p.x > canvas.width + 50) p.x = -50;
+        if (p.x < -50) p.x = canvas.width + 50;
 
         // Draw
         ctx.save();
         ctx.translate(p.x, p.y);
-        ctx.rotate(p.angle);
-        ctx.fillStyle = p.color;
 
         if (p.type === 'rain') {
-          ctx.fillRect(0, 0, p.size / 2, p.size * 12);
-        } else if (p.type === 'leaf') {
+          const streakRatio = p.length / Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+          const dx = p.vx * streakRatio;
+          const dy = p.vy * streakRatio;
+          
           ctx.beginPath();
-          ctx.ellipse(0, 0, p.size, p.size / 2, 0, 0, Math.PI * 2);
-          ctx.fill();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(-dx, -dy);
+          
+          const grad = ctx.createLinearGradient(0, 0, -dx, -dy);
+          grad.addColorStop(0, `rgba(255, 255, 255, ${p.opacity})`);
+          grad.addColorStop(1, `rgba(255, 255, 255, 0)`);
+          
+          ctx.strokeStyle = grad;
+          ctx.lineWidth = p.width;
+          ctx.lineCap = 'round';
+          
+          if (p.z > 0.8) {
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = `rgba(255, 255, 255, ${p.opacity})`;
+          }
+          
+          ctx.stroke();
         } else {
-          ctx.beginPath();
-          ctx.arc(0, 0, p.size, 0, Math.PI * 2);
-          ctx.fill();
+          ctx.rotate(p.angle);
+          ctx.fillStyle = p.color;
+          if (p.type === 'leaf') {
+            ctx.beginPath();
+            ctx.ellipse(0, 0, p.size, p.size / 2, 0, 0, Math.PI * 2);
+            ctx.fill();
+          } else {
+            ctx.beginPath();
+            ctx.arc(0, 0, p.size, 0, Math.PI * 2);
+            ctx.fill();
+          }
         }
         ctx.restore();
       }
