@@ -15,6 +15,33 @@ export default function FallingParticles() {
     let particles: any[] = [];
     let mouse = { x: -1000, y: -1000 };
 
+    const defaultLeafSVG = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBkPSJNIDUwIDIgQyA3NSAyMCwgOTUgNjAsIDUwIDkwIEMgNSA2MCwgMjUgMjAsIDUwIDIgWiIgZmlsbD0iIzRhZGU4MCIgc3Ryb2tlPSIjMTZhMzRhIiBzdHJva2Utd2lkdGg9IjEuNSIvPjxwYXRoIGQ9Ik0gNTAgMiBMIDUwIDkwIE0gNTAgNTAgTCA3MCAzMCBNIDUwIDYzIEwgMzAgNzUgTSA1MCAzNSBMIDMwIDIwIE0gNTAgNzggTCA3MCA2NSIgc3Ryb2tlPSIjMTZhMzRhIiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjEuNSIvPjwvc3ZnPg==";
+    const leafImg = new Image();
+    let yellowLeafImg: HTMLCanvasElement | null = null;
+    leafImg.src = '/leaf.png';
+    leafImg.onerror = () => {
+      if (leafImg.src !== defaultLeafSVG) {
+        leafImg.src = defaultLeafSVG;
+      }
+    };
+    leafImg.onload = () => {
+      const offscreen = document.createElement('canvas');
+      offscreen.width = leafImg.width || 100;
+      offscreen.height = leafImg.height || 100;
+      const octx = offscreen.getContext('2d');
+      if (octx) {
+        octx.drawImage(leafImg, 0, 0, offscreen.width, offscreen.height);
+        octx.globalCompositeOperation = 'source-in';
+        octx.fillStyle = 'rgba(250, 204, 21, 0.5)'; // Yellow tint
+        octx.fillRect(0, 0, offscreen.width, offscreen.height);
+        
+        octx.globalCompositeOperation = 'destination-over';
+        octx.drawImage(leafImg, 0, 0, offscreen.width, offscreen.height);
+        
+        yellowLeafImg = offscreen;
+      }
+    };
+
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -65,16 +92,18 @@ export default function FallingParticles() {
         };
       }
 
+      const isYellow = Math.random() > 0.6; // 40% are yellow
       return {
         type,
         x: Math.random() * w,
         y: yPos ?? Math.random() * h,
         vx: type === 'leaf' ? (Math.random() - 0.5) * 0.8 : (Math.random() - 0.5) * 0.8, // slower
         vy: type === 'leaf' ? Math.random() * 1 + 0.5 : Math.random() * 0.5 + 0.2, // slower
-        size: type === 'leaf' ? Math.random() * 5 + 4 : Math.random() * 2 + 1,
+        size: type === 'leaf' ? Math.random() * 15 + 10 : Math.random() * 2 + 1, // larger size for img
         angle: Math.random() * Math.PI * 2,
-        spin: (Math.random() - 0.5) * 0.03,
-        color: type === 'leaf' ? (Math.random() > 0.5 ? 'rgba(74, 222, 128, 0.5)' : 'rgba(250, 204, 21, 0.5)') : 'rgba(150, 150, 150, 0.3)'
+        spin: (Math.random() - 0.5) * 0.05, // more spin variability
+        isYellow,
+        color: type === 'leaf' ? (isYellow ? 'rgba(250, 204, 21, 0.5)' : 'rgba(74, 222, 128, 0.5)') : 'rgba(150, 150, 150, 0.3)'
       };
     }
 
@@ -204,12 +233,22 @@ export default function FallingParticles() {
           ctx.stroke();
         } else {
           ctx.rotate(p.angle);
-          ctx.fillStyle = p.color;
           if (p.type === 'leaf') {
-            ctx.beginPath();
-            ctx.ellipse(0, 0, p.size, p.size / 2, 0, 0, Math.PI * 2);
-            ctx.fill();
+            const imgToDraw = p.isYellow && yellowLeafImg ? yellowLeafImg : leafImg;
+            if (imgToDraw.width > 0) {
+              const aspect = imgToDraw.width / imgToDraw.height || 1;
+              const width = p.size * 2 * aspect;
+              const height = p.size * 2;
+              ctx.drawImage(imgToDraw, -width / 2, -height / 2, width, height);
+            } else {
+              // fallback if neither loaded
+              ctx.fillStyle = p.color;
+              ctx.beginPath();
+              ctx.ellipse(0, 0, p.size, p.size / 2, 0, 0, Math.PI * 2);
+              ctx.fill();
+            }
           } else {
+            ctx.fillStyle = p.color;
             ctx.beginPath();
             ctx.arc(0, 0, p.size, 0, Math.PI * 2);
             ctx.fill();
